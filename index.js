@@ -1,10 +1,29 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const keys = require('./config/keys');
+require('./models/User'); // User needs to come before passport
+require('./services/passport');
+
+// connect to mongoDB
+mongoose.connect(keys.mongoURI);
 
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send({ hi: 'there' });
-})
+// set cookie session
+app.use(
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
+        keys: [keys.cookieKey]
+    })
+)
+// tell passport to use cookies session
+app.use(passport.initialize());
+app.use(passport.session());
+
+// pass app to authRoutes
+require('./routes/authRoutes')(app);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT);
