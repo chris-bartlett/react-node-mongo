@@ -29,18 +29,27 @@ passport.use(new GoogleStrategy({
     clientID: keys.googleClientId,
     clientSecret: keys.googleClientSecret,
     callbackURL: '/auth/google/callback' // after user grants permission, send user to this route
-}, (accessToken, refreshToken, profile, done) => {
+}, async (accessToken, refreshToken, profile, done) => {
     // check if user already exists  - returns a promise
-    User.findOne({ googleId: profile.id })
-        .then((existingUser) => {
-            if (existingUser) {
-                // user already exists
-                done(null, existingUser);
-            } else {
-                // create new user
-                new User({ googleId: profile.id })
-                    .save()
-                    .then(user => done(null, user));
-            }
-        });
+    // User.findOne({ googleId: profile.id })
+    //     .then((existingUser) => {
+    //         if (existingUser) {
+    //             // user already exists
+    //             done(null, existingUser);
+    //         } else {
+    //             // create new user
+    //             new User({ googleId: profile.id })
+    //                 .save()
+    //                 .then(user => done(null, user));
+    //         }
+    //     });
+    // refactor to use async await
+    const existingUser = await User.findOne({ googleId: profile.id });
+    if (existingUser) {
+        return done(null, existingUser);
+    } 
+
+    const user = await new User({ googleId: profile.id }).save();
+    done(null, user);
+    
 }));
