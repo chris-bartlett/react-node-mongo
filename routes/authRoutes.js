@@ -22,6 +22,7 @@ module.exports = (app) => {
         req.logout(); // logout function added by passport
         res.redirect('/');  // redirect to home page - needs to be BEFORE send data or will send headers
     });
+
 };
 
 

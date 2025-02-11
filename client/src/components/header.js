@@ -14,6 +14,7 @@ const Header = ({ auth, dispatch }) => {
                 return (
                     <>
                         <li><Payments/></li>
+                        <li style={{ margin: '0 10px'}}>Credits: {auth.credits}</li>
                         <li>
                             <a href="/api/logout">Logout</a>
                         </li>
