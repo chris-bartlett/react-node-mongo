@@ -5,6 +5,7 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 require('./models/User'); // User needs to come before passport
+require('./models/Survey'); // User needs to come before passport
 require('./services/passport');
 
 // connect to mongoDB
@@ -27,6 +28,7 @@ app.use(passport.session());
 // pass app to authRoutes
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 // only run in production
 if (process.env.NODE_ENV === 'production') {
